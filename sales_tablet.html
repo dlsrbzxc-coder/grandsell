@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grand Med Lab - 영업 지원 시스템</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+            background-color: #f8f9fa;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 24px;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #888;
+        }
+
+        /* Main Tabs */
+        .main-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .tab-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px 24px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .tab-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-color: #3182f6;
+        }
+
+        .tab-card.active {
+            border-color: #3182f6;
+            background: #f9fbff;
+        }
+
+        .tab-icon {
+            display: none;
+        }
+
+        .tab-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .tab-description {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.5;
+        }
+
+        .tab-count {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 12px;
+            background: #f1f3f5;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* Content Area */
+        .content-area {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            min-height: 400px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: none;
+        }
+
+        .content-area.active {
+            display: block;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .content-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px 12px 40px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #3182f6;
+            box-shadow: 0 0 0 3px rgba(49, 130, 246, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            color: #adb5bd;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 16px;
+        }
+
+        .product-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .product-item:hover {
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+
+        .product-icon {
+            display: none;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 6px;
+        }
+
+        .product-category {
+            font-size: 13px;
+            color: #868e96;
+            margin-bottom: 8px;
+        }
+
+        .product-status {
+            display: inline-block;
+            padding: 4px 10px;
+            background: white;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #495057;
+            font-weight: 600;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .empty-icon {
+            display: none;
+        }
+
+        .empty-text {
+            font-size: 16px;
+            color: #adb5bd;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-tabs {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Grand Med Lab</h1>
+            <p>영업 지원 시스템</p>
+        </div>
+
+        <!-- Main Tabs -->
+        <div class="main-tabs">
+            <div class="tab-card active" onclick="switchTab('reagent')">
+                <div class="tab-icon">⚗️</div>
+                <div class="tab-title">시약 정보</div>
+                <div class="tab-description">진단 시약 제품 정보 및 사양</div>
+                <div class="tab-count">24개 제품</div>
+            </div>
+            
+            <div class="tab-card" onclick="switchTab('equipment')">
+                <div class="tab-icon">🔬</div>
+                <div class="tab-title">장비 정보</div>
+                <div class="tab-description">분석 장비 정보 및 스펙</div>
+                <div class="tab-count">12개 장비</div>
+            </div>
+        </div>
+
+        <!-- Reagent Content -->
+        <div class="content-area active" id="reagent-content">
+            <div class="content-header">
+                <div class="content-title">시약 정보</div>
+                <div class="search-box">
+                    <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <input type="text" placeholder="시약명 또는 카테고리 검색">
+                </div>
+            </div>
+
+            <div class="product-grid">
+                <div class="product-item">
+                    <div class="product-icon">🧪</div>
+                    <div class="product-name">면역학 시약 A</div>
+                    <div class="product-category">면역학 검사</div>
+                    <div class="product-status">재고 있음</div>
+                </div>
+
+                <div class="product-item">
+                    <div class="product-icon">🧪</div>
+                    <div class="product-name">생화학 시약 B</div>
+                    <div class="product-category">생화학 검사</div>
+                    <div class="product-status">재고 있음</div>
+                </div>
+
+                <div class="product-item">
+                    <div class="product-icon">🧪</div>
+                    <div class="product-name">혈액학 시약 C</div>
+                    <div class="product-category">혈액학 검사</div>
+                    <div class="product-status">재고 있음</div>
+                </div>
+
+                <div class="product-item">
+                    <div class="product-icon">🧪</div>
+                    <div class="product-name">분자진단 시약 D</div>
+                    <div class="product-category">분자진단</div>
+                    <div class="product-status">재고 있음</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Equipment Content -->
+        <div class="content-area" id="equipment-content">
+            <div class="content-header">
+                <div class="content-title">장비 정보</div>
+                <div class="search-box">
+                    <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <input type="text" placeholder="장비명 또는 카테고리 검색">
+                </div>
+            </div>
+
+            <div class="product-grid">
+                <div class="product-item">
+                    <div class="product-icon">⚙️</div>
+                    <div class="product-name">자동분석기 X1</div>
+                    <div class="product-category">생화학 분석</div>
+                    <div class="product-status">시연 가능</div>
+                </div>
+
+                <div class="product-item">
+                    <div class="product-icon">⚙️</div>
+                    <div class="product-name">혈구분석기 Y2</div>
+                    <div class="product-category">혈액 분석</div>
+                    <div class="product-status">시연 가능</div>
+                </div>
+
+                <div class="product-item">
+                    <div class="product-icon">⚙️</div>
+                    <div class="product-name">PCR 장비 Z3</div>
+                    <div class="product-category">분자진단</div>
+                    <div class="product-status">시연 가능</div>
+                </div>
+
+                <div class="product-item">
+                    <div class="product-icon">⚙️</div>
+                    <div class="product-name">면역분석기 W4</div>
+                    <div class="product-category">면역 분석</div>
+                    <div class="product-status">시연 가능</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-card').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Hide all content areas
+            document.querySelectorAll('.content-area').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab
+            event.currentTarget.classList.add('active');
+            
+            // Show corresponding content
+            document.getElementById(tabName + '-content').classList.add('active');
+        }
+
+        // Search functionality
+        document.querySelectorAll('.search-box input').forEach(input => {
+            input.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const productItems = e.target.closest('.content-area').querySelectorAll('.product-item');
+                
+                productItems.forEach(item => {
+                    const name = item.querySelector('.product-name').textContent.toLowerCase();
+                    const category = item.querySelector('.product-category').textContent.toLowerCase();
+                    
+                    if (name.includes(searchTerm) || category.includes(searchTerm)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
